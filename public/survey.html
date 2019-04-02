@@ -76,7 +76,7 @@
                 //append the input field
                 form.append(
                     `<input class="form-check-input" ` + `type="radio" `
-                    + `name="` + divID + `Options" ` + `id="` + divID + i +`"`
+                    + `name="` + divID + `Options" ` + `id="` + divID + i + `"`
                     + `value="` + i + `">`
                 );
 
@@ -108,12 +108,9 @@
                 values: []
             };
             for (let i = 1; i <= 10; i++) {
-                for(let ans = 1; ans <= 5; ans++) {
-                    // This if statement isn't working as expected, so no values are pushed
-                    if($("#question"+i+ans).checked) {
-                        newPerson.values.push(ans);
-                    }
-                }
+                newPerson.values.push(
+                    document.querySelector('input[name="question' + i + 'Options"]:checked').value
+                );
             }
 
             // This line is the magic. It"s very similar to the standard ajax function we used.
