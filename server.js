@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Routing is handled in other files
-require("./routes/apiRoutes")(app);
-require("./routes/htmlRoutes")(app);
+require("./routing/apiRoutes")(app);
+require("./routing/htmlRoutes")(app);
 
 // Takes in requests and sends to the appropriate route.
 app.listen(PORT, () => {

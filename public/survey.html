@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Friends Survey</title>
+
+    <!-- Bootstrap css helper -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- jQuery to assist in scripting -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body class="container">
+    <h1>Survey Questions</h1>
+    <br>
+    <form role="form">
+        <h2>About You</h2>
+        <div class="form-group">
+            <label for="name">
+                <h4>Name (Required)</h4>
+            </label>
+            <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+            <label for="pic">
+                <h4>Link to Photo (Required)</h4>
+            </label>
+            <input type="text" class="form-control" id="pic">
+        </div>
+        <br>
+        <h4>Now rate these statements</h4>
+        <p>(1 is Strongly Disagree, 3 is Nuetral, and 5 is Strongly Agree)</p>
+        <br>
+        <!-- Dynamically created form elements added to each div id="question#" -->
+        <h6>Your mind is always buzzing with unexplored ideas and plans.</h6>
+        <div id="question1"></div>
+        <h6>Generally speaking, you rely more on your experience than your imagination.</h6>
+        <div id="question2"></div>
+        <h6>You find it easy to stay relaxed and focused even when there is some pressure.</h6>
+        <div id="question3"></div>
+        <h6>You rarely do something just out of sheer curiosity.</h6>
+        <div id="question4"></div>
+        <h6>People can rarely upset you.</h6>
+        <div id="question5"></div>
+        <h6>It is often difficult for you to relate to other people’s feelings.</h6>
+        <div id="question6"></div>
+        <h6>In a discussion, truth should be more important than people’s sensitivities.</h6>
+        <div id="question7"></div>
+        <h6>You rarely get carried away by fantasies and ideas.</h6>
+        <div id="question8"></div>
+        <h6>You think that everyone’s views should be respected regardless of whether they are supported by facts or
+            not.
+        </h6>
+        <div id="question9"></div>
+        <h6>You feel more energetic after spending time with a group of people.</h6>
+        <div id="question10"></div>
+
+        <br><br>
+        <button type="submit" class="btn btn-primary btn-block" id="submit">Submit Answers</button>
+    </form>
+
+    <script>
+        const generateForm = function (divID) {
+            let target = $("#" + divID);
+
+            for (let i = 1; i <= 5; i++) {
+                //create the form section for this option
+                let form = $("<div>");
+                form.addClass("form-check form-check-inline")
+
+                //append the input field
+                form.append(
+                    `<input class="form-check-input" ` + `type="radio" `
+                    + `name="` + divID + `Options" ` + `id="` + divID + i +`"`
+                    + `value="` + i + `">`
+                );
+
+                //append the input field's label
+                form.append(
+                    `<label class="form-check-label" for="` + divID + i + `">` + i + `</label>`
+                );
+
+                //Then place it where it goes
+                target.append(form);
+            }
+        }
+
+        // This generates the form for each question
+        for (let i = 1; i <= 10; i++) {
+            generateForm("question" + i);
+        }
+    </script>
+
+    <script>
+        // This script handles form submission
+        $("#submit").on("click", function (event) {
+            event.preventDefault();
+
+            // Here we grab the form elements
+            var newPerson = {
+                name: $("#name").val().trim(),
+                pic: $("#pic").val().trim(),
+                values: []
+            };
+            for (let i = 1; i <= 10; i++) {
+                for(let ans = 1; ans <= 5; ans++) {
+                    // This if statement isn't working as expected, so no values are pushed
+                    if($("#question"+i+ans).checked) {
+                        newPerson.values.push(ans);
+                    }
+                }
+            }
+
+            // This line is the magic. It"s very similar to the standard ajax function we used.
+            // Essentially we give it a URL, we give it the object we want to send, then we have a "callback".
+            // The callback is the response of the server. In our case, we set up code in api-routes that "returns" true or false
+            // depending on if a tables is available or not.
+
+            $.post("/api/newFriend", newPerson,
+                function (data) {
+                    //Clearing the forms is a bit difficult, will return back to if enough time
+                    //Then alert back the name of the best match
+                    alert(data.name);
+                }
+            );
+        });
+    </script>
+</body>
+
+</html>
