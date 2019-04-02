@@ -1,5 +1,5 @@
 // This private file can require the data
-const data = require("../data/friends");
+const data = require("../app/data/friends");
 
 module.exports = (app) => {
     // Sends information to the client
@@ -15,7 +15,7 @@ module.exports = (app) => {
             newFriend.values[i] = parseInt(newFriend.values[i]);
         }
         data.push(newFriend);
-        res.send(calculateBestMatch(req.body));
+        res.send(calculateBestMatch(newFriend));
     });
 
     // Calculations
@@ -25,8 +25,12 @@ module.exports = (app) => {
         }
         // Use a for loop to find the best match
         let bestMatch = undefined;
-        for (let i = 0; i < data.length; i++) {
+        // length-1 to prevent self-comparison
+        for (let i = 0; i < data.length -1; i++) {
             const comparison = compare(person.values, data[i].values);
+            
+            console.log("comparison with " + data[i].name + " " + comparison);
+
             if (bestMatch === undefined || comparison < bestMatch.score)
                 bestMatch = { match: data[i], score: comparison };
         }
@@ -40,5 +44,6 @@ module.exports = (app) => {
         for (let i = 0; i < person.length; i++) {
             differences += Math.abs(person[i] - other[i]);
         }
+        return differences;
     }
 };
